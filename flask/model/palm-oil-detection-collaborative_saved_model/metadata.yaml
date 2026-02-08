@@ -1,0 +1,18 @@
+description: Ultralytics palm-oil-detection-collaborative model trained on /content/drive/MyDrive/YOLOv8/Palm-Oil-Fruit-Detection-v2-1/data.yaml
+author: Ultralytics
+license: AGPL-3.0 https://ultralytics.com/license
+date: '2024-10-24T09:35:15.966679'
+version: 8.0.203
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: Abnormal
+  1: Empty Bunch
+  2: Overripe
+  3: Ripe
+  4: Underripe
+  5: Unripe

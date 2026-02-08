@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid()) @db.VarChar(255)
+  name     String
+  email    String? @unique
+  password String
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  video     Video[]
+
+  @@map("user")
+}
+
+model Video {
+  id     String @id @default(uuid()) @db.VarChar(255)
+  name   String
+  path   String
+  idUser String @map("id_user") @db.VarChar(255)
+
+  user User @relation(fields: [idUser], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  job       Job[]
+
+  @@map("video")
+}
+
+model Job {
+  id         String    @id @default(uuid()) @db.VarChar(255)
+  name       String
+  status     JobStatus @default(PENDING)
+  modelName  String    @map("model_name")
+  idVideo    String    @map("id_video") @db.VarChar(255)
+  result     Json?
+  showConf   Boolean   @default(true) @map("show_conf")
+  showLabels Boolean   @default(true) @map("show_labels")
+  conf       Float     @default(0.2)
+
+  video Video @relation(fields: [idVideo], references: [id])
+
+  startedAt  DateTime? @map("started_at") @db.Timestamp(6)
+  finishedAt DateTime? @map("finished_at") @db.Timestamp(6)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@map("job")
+}
+
+enum JobStatus {
+  PENDING
+  DETECTING
+  DETECTED
+  ERROR
+  CANCELED
+}
